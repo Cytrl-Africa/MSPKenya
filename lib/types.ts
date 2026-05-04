@@ -45,6 +45,7 @@ export const KENYA_COUNTIES = [
 export const MOCK_CASES: MissingPerson[] = [
   {
     id: "1",
+    photoUrl: "/avatar.svg",
     caseNumber: "TK-2024-0042",
     name: "Amina Wanjiru Ochieng",
     age: 14,
