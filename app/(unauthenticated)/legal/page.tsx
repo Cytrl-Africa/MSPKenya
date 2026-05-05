@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/header/Navbar";
 import { LEGAL_PAGES } from "@/components/legal/LegalLayout";
+import { Footer } from "@/components/footer/Footer";
 
 const ICONS = [Scale, Shield, FileText, AlertTriangle, RotateCcw, Camera, Users, Cookie, Handshake];
 
@@ -99,6 +100,7 @@ export default function LegalIndexPage() {
           <p className="text-xs text-neutral-medium/60 mt-2">© {new Date().getFullYear()} MSPKenya · All policies last reviewed January 2025</p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
