@@ -34,6 +34,17 @@ export const Footer = () => {
                     <p className="opacity-60">
                         © 2026 MSPKenya
                     </p>
+
+                    <a
+                        href="https://cytrl.africa"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-1.5 text-gray-400 hover:text-[#009CDE] transition-colors duration-300 opacity-60"
+                        aria-label="Engineered by Cytrl Africa"
+                    >
+                        <span className="font-mono">{'< />'}</span>
+                        <span className="opacity-80">by Cytrl Africa</span>
+                    </a>
                 </div>
 
             </div>
