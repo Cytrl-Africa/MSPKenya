@@ -130,22 +130,22 @@ export default function HomePage() {
           {[
             {
               icon: <Heart size={20} />,
-              title: t("Report to the police"),
-              desc: t("Go to your nearest police station within 48 to 72 hours and record a statement which in turn they'll issue an OB number"),
+              title: t("step1Title"),
+              desc: t("step1Desc"),
               num: "01",
               color: "bg-accent/10 text-accent",
             },
             {
               icon: <Users size={20} />,
-              title: t("Fill in the form"),
-              desc: t("Come to our website and fill in the missing persons form and provide details as accurately as you can."),
+              title: t("step2Title"),
+              desc: t("step2Desc"),
               num: "02",
               color: "bg-primary/10 text-primary",
             },
             {
               icon: <Lightbulb size={20} />,
-              title: t("Wait"),
-              desc: t("People who have seen the reportedly missing person might leave helpful info. Help share the link for widespread reach."),
+              title: t("step3Title"),
+              desc: t("step3Desc"),
               num: "03",
               color: "bg-warning/10 text-warning",
             },
