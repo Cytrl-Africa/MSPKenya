@@ -22,23 +22,31 @@ import { useI18n } from "@/contexts/I18nContext";
 import { MOCK_CASES, Tip } from "@/lib/types";
 import { useCases } from "@/services/cases/cases.queries";
 import { CommunityTip } from "@/services/cases/cases.types";
+import LoadingCube from "@/components/loading/loading";
 
 export default function CaseDetailPage() {
   const { t } = useI18n();
   const params = useParams();
   const id = params?.id as string;
+  const { data: cases = [], isPending } = useCases();
 
-  const { data: cases = [] } = useCases();
-
-
-  const person = cases.find((p) => p.id === id);
-
+  
   const [tipText, setTipText] = useState("");
   const [tipAuthor, setTipAuthor] = useState("");
   const [isAnon, setIsAnon] = useState(false);
-  const [tips, setTips] = useState<CommunityTip[]>(person?.communityTips ?? []);
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
+  const isLoading = isPending || !cases;
+  const person = cases.find((p) => p.id === id);
+  const [tips, setTips] = useState<CommunityTip[]>(person?.communityTips ?? []);
+    
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-neutral-light">
+        <LoadingCube />
+      </div>
+    );
+  }
 
   if (!person) {
     return (

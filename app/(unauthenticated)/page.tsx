@@ -20,8 +20,6 @@ export default function HomePage() {
   const { data = [], isPending } = useCases();
   const isLoading = isPending || !data;
 
-  console.log(data?.map((item) => item.name))
-
   const filtered = useMemo(() => {
     return data.filter((p) => {
       const q = search.toLowerCase();
