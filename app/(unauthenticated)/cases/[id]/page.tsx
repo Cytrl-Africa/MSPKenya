@@ -20,18 +20,23 @@ import {
 import Navbar from "@/components/header/Navbar";
 import { useI18n } from "@/contexts/I18nContext";
 import { MOCK_CASES, Tip } from "@/lib/types";
+import { useCases } from "@/services/cases/cases.queries";
+import { CommunityTip } from "@/services/cases/cases.types";
 
 export default function CaseDetailPage() {
   const { t } = useI18n();
   const params = useParams();
   const id = params?.id as string;
 
-  const person = MOCK_CASES.find((p) => p.id === id);
+  const { data: cases = [] } = useCases();
+
+
+  const person = cases.find((p) => p.id === id);
 
   const [tipText, setTipText] = useState("");
   const [tipAuthor, setTipAuthor] = useState("");
   const [isAnon, setIsAnon] = useState(false);
-  const [tips, setTips] = useState<Tip[]>(person?.tips ?? []);
+  const [tips, setTips] = useState<CommunityTip[]>(person?.communityTips ?? []);
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -75,27 +80,28 @@ export default function CaseDetailPage() {
       photo: "bg-neutral-light",
       dot: false,
     },
-  }[person.status] ?? {
+  }[person.caseStatus] ?? {
     badge: "bg-primary/10 text-primary border border-primary/20",
     photo: "bg-neutral-light",
     dot: false,
   };
 
   const statusLabel =
-    person.status === "urgent"
+    person.caseStatus === "urgent"
       ? t("urgent")
-      : person.status === "found"
+      : person.caseStatus === "found"
       ? t("found")
       : t("missing");
 
   const handleSubmitTip = () => {
     if (!tipText.trim()) return;
-    const newTip: Tip = {
+    const newTip: CommunityTip = {
       id: `t-${Date.now()}`,
-      author: isAnon ? "Anonymous" : tipAuthor || "Anonymous",
-      content: tipText,
-      timestamp: new Date().toISOString(),
+      name: isAnon ? "Anonymous" : tipAuthor || "Anonymous",
+      tip: tipText,
+      reportDate: new Date().toISOString(),
       isAnonymous: isAnon,
+      reportedCase: id
     };
     setTips((prev) => [...prev, newTip]);
     setTipText("");
@@ -200,7 +206,7 @@ export default function CaseDetailPage() {
                   { label: t("age_label"), value: `${person.age} years` },
                   { label: t("gender"), value: t(person.gender) },
                   { label: t("county"), value: person.county },
-                  { label: t("reportedDate"), value: formatDate(person.reportedDate) },
+                  { label: t("reportedDate"), value: formatDate(person.dateReported) },
                 ].map((item) => (
                   <div key={item.label} className="bg-white px-5 py-3.5">
                     <p className="text-xs text-neutral-medium mb-0.5">{item.label}</p>
@@ -332,11 +338,11 @@ export default function CaseDetailPage() {
                   </div>
                   <div>
                     <p className="text-xs text-neutral-medium">{t("reportedBy")}</p>
-                    <p className="text-sm font-semibold text-neutral-dark">{person.reportedBy}</p>
+                    <p className="text-sm font-semibold text-neutral-dark">{person.contactInfo.name}</p>
                   </div>
                 </div>
                 <a
-                  href={`tel:${person.contactPhone}`}
+                  href={`tel:${person.contactInfo.phoneNumber}`}
                   className="flex items-center gap-3 bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-xl p-3 transition-colors group"
                 >
                   <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center shrink-0">
@@ -345,7 +351,7 @@ export default function CaseDetailPage() {
                   <div>
                     <p className="text-xs text-neutral-medium">{t("contactPhone")}</p>
                     <p className="text-sm font-bold text-primary group-hover:underline">
-                      {person.contactPhone}
+                      {person.contactInfo.phoneNumber}
                     </p>
                   </div>
                 </a>
@@ -378,14 +384,14 @@ export default function CaseDetailPage() {
                     >
                       <div className="flex items-center justify-between mb-1.5">
                         <span className={`text-xs font-semibold ${tip.isAnonymous ? "text-neutral-medium" : "text-primary"}`}>
-                          {tip.isAnonymous ? "Anonymous" : tip.author}
+                          {tip.isAnonymous ? "Anonymous" : tip.name}
                         </span>
                         <span className="flex items-center gap-1 text-xs text-neutral-medium">
                           <Clock size={10} />
-                          {formatTipTime(tip.timestamp)}
+                          {formatTipTime(tip.reportDate)}
                         </span>
                       </div>
-                      <p className="text-sm text-neutral-dark leading-relaxed">{tip.content}</p>
+                      <p className="text-sm text-neutral-dark leading-relaxed">{tip.tip}</p>
                     </div>
                   ))}
                 </div>
