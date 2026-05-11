@@ -19,10 +19,11 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/header/Navbar";
 import { useI18n } from "@/contexts/I18nContext";
-import { MOCK_CASES, Tip } from "@/lib/types";
 import { useCases } from "@/services/cases/cases.queries";
 import { CommunityTip } from "@/services/cases/cases.types";
 import LoadingCube from "@/components/loading/loading";
+import { useCreateCommunityTip } from "@/services/cases/cases.mutations";
+import { UUID } from "crypto";
 
 export default function CaseDetailPage() {
   const { t } = useI18n();
@@ -39,6 +40,7 @@ export default function CaseDetailPage() {
   const isLoading = isPending || !cases;
   const person = cases.find((p) => p.id === id);
   const [tips, setTips] = useState<CommunityTip[]>(person?.communityTips ?? []);
+  const { mutate: createTip, isPending: isSubmittingTip } = useCreateCommunityTip();
     
   if (isLoading) {
     return (
@@ -104,18 +106,33 @@ export default function CaseDetailPage() {
   const handleSubmitTip = () => {
     if (!tipText.trim()) return;
     const newTip: CommunityTip = {
-      id: `t-${Date.now()}`,
+      // id: ``,
       name: isAnon ? "Anonymous" : tipAuthor || "Anonymous",
       tip: tipText,
       reportDate: new Date().toISOString(),
       isAnonymous: isAnon,
-      reportedCase: id
+      reportedCase: params.id as UUID,
     };
-    setTips((prev) => [...prev, newTip]);
-    setTipText("");
-    setTipAuthor("");
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+
+    createTip(newTip, {
+      onSuccess: () => {
+        setTips((prev) => [...prev, newTip]);
+
+        setTipText("");
+        setTipAuthor("");
+        setIsAnon(false);
+
+        setSubmitted(true);
+
+        setTimeout(() => {
+          setSubmitted(false);
+        }, 4000);
+      },
+
+      onError: (error) => {
+        console.error("Failed to submit tip", error);
+      },
+    });
   };
 
   const handleShare = () => {
@@ -323,11 +340,11 @@ export default function CaseDetailPage() {
 
                 <button
                   onClick={handleSubmitTip}
-                  disabled={!tipText.trim()}
+                  disabled={!tipText.trim() || isSubmittingTip}
                   className="w-full bg-primary hover:bg-primary-dark disabled:opacity-40 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-colors"
                 >
                   <Send size={14} />
-                  {t("submitTip")}
+                    {isSubmittingTip ? "Submitting..." : t("submitTip")}
                 </button>
               </div>
             </div>

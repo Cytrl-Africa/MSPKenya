@@ -1,3 +1,5 @@
+import { UUID } from "crypto";
+
 export interface ContactInfo {
   name: string;
   phoneNumber: string;
@@ -10,7 +12,7 @@ export interface CommunityTip {
   tip: string;
   reportDate: string;
   isAnonymous: boolean;
-  reportedCase: string;
+  reportedCase: UUID;
 }
 
 export interface Case {
