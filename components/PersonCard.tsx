@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { MapPin, Calendar, MessageCircle, User } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext";
-import { MissingPerson } from "../lib/types";
+import { Case } from "@/services/cases/cases.types";
 
 interface Props {
-  person: MissingPerson;
+  person: Case;
 }
 
 function getTimeAgo(dateStr: string, t: (k: string) => string): string {
@@ -23,12 +23,12 @@ function getTimeAgo(dateStr: string, t: (k: string) => string): string {
 export default function PersonCard({ person }: Props) {
   const { t } = useI18n();
 
-  const timeAgo = getTimeAgo(person.reportedDate, t);
+  const timeAgo = getTimeAgo(person.dateReported, t);
 
   const statusLabel =
-    person.status === "urgent"
+    person.caseStatus === "urgent"
       ? t("urgent")
-      : person.status === "found"
+      : person.caseStatus === "found"
       ? t("found")
       : t("missing");
 
@@ -48,7 +48,7 @@ export default function PersonCard({ person }: Props) {
       photo: "bg-neutral-light",
       dot: false,
     },
-  }[person.status] ?? {
+  }[person.caseStatus] ?? {
     badge: "bg-primary/10 text-primary border border-primary/20",
     photo: "bg-neutral-light",
     dot: false,
@@ -120,7 +120,7 @@ export default function PersonCard({ person }: Props) {
           <div className="flex items-center justify-between pt-3 border-t border-border">
             <div className="flex items-center gap-1.5 text-xs text-neutral-medium">
               <MessageCircle size={12} />
-              <span>{person.tips.length} {t("tips").toLowerCase()}</span>
+              <span>{person.communityTips.length} {t("tips").toLowerCase()}</span>
             </div>
             <span className="text-xs font-semibold text-primary group-hover:underline">
               {t("viewDetails")} →
