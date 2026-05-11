@@ -8,12 +8,17 @@ import Navbar from "../../components/header/Navbar";
 import { useI18n } from "@/contexts/I18nContext";
 import { MOCK_CASES, KENYA_COUNTIES } from "@/lib/types";
 import { Footer } from "@/components/footer/Footer";
+import { useCases } from "@/services/cases/cases.queries";
 
 export default function HomePage() {
   const { t } = useI18n();
   const [search, setSearch] = useState("");
   const [filterCounty, setFilterCounty] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+
+  const {data, isPending} = useCases();
+
+  console.log(data?.map((item) => item.name))
 
   const filtered = useMemo(() => {
     return MOCK_CASES.filter((p) => {
@@ -31,9 +36,9 @@ export default function HomePage() {
   }, [search, filterCounty, filterStatus]);
 
   const stats = {
-    total: MOCK_CASES.length,
+    total: data?.length,
     found: MOCK_CASES.filter((c) => c.status === "found").length,
-    tips: MOCK_CASES.reduce((sum, c) => sum + c.tips.length, 0),
+    tips: data?.reduce((sum, c) => sum + c.communityTips.length, 0),
   };
 
   return (
