@@ -1,0 +1,105 @@
+$light-coral: #ff8484;
+$russian-violet: #110d31;
+$size: 80px;
+$animation-duration: 2s;
+
+.scene {
+  position: relative;
+  height: $size * 2.75;
+  width: $size * 2.75;
+  display: grid;
+  place-items: center;
+}
+
+.cubeWrapper {
+  transform-style: preserve-3d;
+  animation: bouncing $animation-duration infinite;
+}
+
+.cube {
+  transform-style: preserve-3d;
+  transform: rotateX(45deg) rotateZ(45deg);
+  animation: rotation $animation-duration infinite;
+}
+
+.cubeFaces {
+  transform-style: preserve-3d;
+  height: $size;
+  width: $size;
+  position: relative;
+  transform: translateZ(-$size / 2);
+}
+
+.cubeFace {
+  position: absolute;
+  inset: 0;
+  background: $russian-violet;
+  border: 1px solid $light-coral;
+}
+
+/* Faces */
+.shadow {
+  transform: translateZ(-$size);
+  animation: bouncing-shadow $animation-duration infinite;
+  opacity: 0.2;
+}
+
+.top {
+  transform: translateZ($size);
+}
+
+.front {
+  transform: rotateY(-90deg);
+}
+
+.back {
+  transform: rotateY(-90deg) translateZ(-$size);
+}
+
+.right {
+  transform: rotateX(-90deg) translateY(-$size);
+}
+
+.left {
+  transform: rotateX(-90deg) translateY(-$size) translateZ($size);
+}
+
+/* Animations */
+@keyframes rotation {
+  0% {
+    transform: rotateX(45deg) rotateZ(45deg);
+  }
+  50% {
+    transform: rotateX(45deg) rotateZ(225deg);
+  }
+  100% {
+    transform: rotateX(45deg) rotateZ(405deg);
+  }
+}
+
+@keyframes bouncing {
+  0% {
+    transform: translateY(-40px);
+  }
+  45% {
+    transform: translateY(40px);
+  }
+  100% {
+    transform: translateY(-40px);
+  }
+}
+
+@keyframes bouncing-shadow {
+  0% {
+    transform: translateZ(-$size) scale(1.3);
+    opacity: 0.05;
+  }
+  45% {
+    transform: translateZ(0);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateZ(-$size) scale(1.3);
+    opacity: 0.05;
+  }
+}
