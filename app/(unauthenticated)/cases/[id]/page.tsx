@@ -106,7 +106,6 @@ export default function CaseDetailPage() {
   const handleSubmitTip = () => {
     if (!tipText.trim()) return;
     const newTip: CommunityTip = {
-      // id: ``,
       name: isAnon ? "Anonymous" : tipAuthor || "Anonymous",
       tip: tipText,
       reportDate: new Date().toISOString(),
